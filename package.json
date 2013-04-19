@@ -1,9 +1,17 @@
-{ "name" : "cv"
-, "version" : "0.0.1"
-, "bin" : { }
-, "engines" : { "node" : "0.10.x" }
-, "dependencies" :
-  { "ffi" : "1.2.x"
-  , "ref" : "0.1.x"
+{
+  "name" : "cv",
+  "version" : "0.0.1",
+  "main" : "./index.js",
+  "engines" : {
+    "node" : ">= 0.8.x"
+  },
+  "dependencies" : {
+    "ffi" : "1.2.x",
+    "ref" : "0.1.x"
+  },
+  "author" : {
+      "name" : "Carter Thaxton",
+      "email" : "carter.thaxton@gmail.com",
+      "url" : "http://github.com/carter-thaxton"
   }
 }
