@@ -1,33 +1,65 @@
 var ffi = require('ffi');
 var ref = require('ref');
+var Struct = require('ref-struct');
 
-var libopencv_core = ffi.Library('libopencv_core', {
+// ---- Types ----
+var VoidPtr = ref.refType(ref.types.void);
+var CvCapturePtr = VoidPtr;
+var CvArrPtr = VoidPtr;
+
+var CvSize = Struct({
+  width: 'int',
+  height: 'int'
 });
 
-// var librunloop = ffi.Library('./librunloop', {
-//   'runLoop': [ 'int', [] ],
-//   'runLoopForever': [ 'void', [] ],
-// });
+var IplImage = Struct({
 
-var libopencv_highgui = ffi.Library('libopencv_highgui', {
-  'cvCreateCameraCapture': [ 'pointer', [ 'int' ] ],
-  'cvQueryFrame': [ 'pointer', [ 'pointer' ] ],
-  'cvGrabFrame': [ 'bool', [ 'pointer' ] ],
-  'cvRetrieveFrame': [ 'pointer', [ 'pointer' ] ],
-  'cvSaveImage': [ 'int', [ 'string', 'pointer' ] ],
+});
+var IplImagePtr = ref.refType(IplImage);
+var IplImagePtrPtr = ref.refType(IplImagePtr);
+
+
+// ---- Functions ----
+var core = ffi.Library('libopencv_core', {
+  'cvGetSize': [ CvSize, [ CvArrPtr ] ],
+  'cvCreateImage': [ IplImagePtr, [ CvSize, 'int', 'int' ] ],
+  'cvReleaseImage': [ 'void', [ IplImagePtrPtr ] ],
 });
 
+var imgproc = ffi.Library('libopencv_imgproc', {
+  'cvCvtColor': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
+});
+
+var highgui = ffi.Library('libopencv_highgui', {
+  'cvCreateCameraCapture': [ CvCapturePtr, [ 'int' ] ],
+  'cvQueryFrame': [ IplImagePtr, [ CvCapturePtr ] ],
+  'cvGrabFrame': [ 'bool', [ CvCapturePtr ] ],
+  'cvRetrieveFrame': [ IplImagePtr, [ CvCapturePtr ] ],
+  'cvSaveImage': [ 'int', [ 'string', IplImagePtr ] ],
+});
+
+
+// ---- API ----
 var cv = {};
 
-cv.captureFromCAM = function(index, cb) {
-  // cannot run async on mac, unfortunately
-  var result = libopencv_highgui.cvCreateCameraCapture(index);
-  if (cb) cb(null, result);
-};
+cv.getSize = core.cvGetSize;
+cv.createImage = core.cvCreateImage;
+cv.releaseImage = core.cvReleaseImage;
 
-cv.queryFrame = libopencv_highgui.cvQueryFrame.async;
-cv.grabFrame = libopencv_highgui.cvGrabFrame.async;
-cv.retrieveFrame = libopencv_highgui.cvRetrieveFrame.async;
-cv.saveImage = libopencv_highgui.cvSaveImage.async;
+cv.cvtColor = imgproc.cvCvtColor;
+
+cv.captureFromCAM = highgui.cvCreateCameraCapture;
+cv.queryFrame = highgui.cvQueryFrame;
+cv.grabFrame = highgui.cvGrabFrame;
+cv.retrieveFrame = highgui.cvRetrieveFrame;
+cv.saveImage = highgui.cvSaveImage;
+
+
+// ---- Enums ----
+cv.BGR2GRAY    = 6;
+cv.RGB2GRAY    = 7;
+cv.GRAY2BGR    = 8;
+cv.GRAY2RGB    = cv.GRAY2BGR;
+
 
 module.exports = cv;

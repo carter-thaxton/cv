@@ -14,19 +14,37 @@ function end(name, text) {
   console.log('ending: ' + text + ' took ' + elapsed / 1000000 + 'ms')
 }
 
-start('program')
-start('open camera')
-cv.captureFromCAM(-1, function(err, camera) {
-  end('open camera')
+function endSync(name) {
+  end(name, name + ' - sync')
+}
 
-  start('query frame')
-  cv.queryFrame(camera, function(err, image) {
-    end('query frame')
+// can't run this async on mac, due to event loop
+var camera = cv.captureFromCAM(-1);
 
-    start('save image')
-    cv.saveImage('out.jpg', image, function(err, result) {
-      end('save image', 'save image - result: ' + result)
-      end('program')
+start('processing');
+
+cv.queryFrame.async(camera, function(err, image) {
+
+  var size = cv.getSize(image);
+
+  start('create image')
+  cv.createImage.async(size, 8, 1, function(err, image_gray) {
+    end('create image')
+
+    start('convert grayscale')
+    cv.cvtColor.async(image, image_gray, cv.BGR2GRAY, function(err) {
+      end('convert grayscale')
+
+      cv.saveImage.async('out/orig.jpg', image, function(err, result) {
+        cv.releaseImage(image.ref())
+        cv.saveImage.async('out/gray.jpg', image_gray, function(err, result) {
+          cv.releaseImage(image_gray.ref())
+
+          end('processing');
+        })
+      })
     })
+    endSync('convert grayscale')
   })
+  endSync('create image')
 })
