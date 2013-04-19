@@ -1,0 +1,9 @@
+{ "name" : "cv"
+, "version" : "0.0.1"
+, "bin" : { }
+, "engines" : { "node" : "0.10.x" }
+, "dependencies" :
+  { "ffi" : "1.2.x"
+  , "ref" : "0.1.x"
+  }
+}
