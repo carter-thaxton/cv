@@ -1,18 +1,35 @@
 {
-  "name" : "cv",
-  "version" : "0.0.1",
-  "main" : "./index.js",
-  "engines" : {
-    "node" : ">= 0.8.x"
+  "name": "cv",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "engines": {
+    "node": ">= 0.8.x"
   },
-  "dependencies" : {
-    "ffi" : "1.2.x",
-    "ref" : "0.1.x",
+  "dependencies": {
+    "ffi": "1.2.x",
+    "ref": "0.1.x",
     "ref-struct": "0.0.x"
   },
-  "author" : {
-      "name" : "Carter Thaxton",
-      "email" : "carter.thaxton@gmail.com",
-      "url" : "http://github.com/carter-thaxton"
-  }
+  "author": "Carter Thaxton <carter.thaxton@gmail.com> (http://github.com/carter-thaxton)",
+  "readmeFilename": "README.md",
+  "gitHead": "2b2d834afd19f614a925075c4fbca98f7700afc3",
+  "description": "OpenCV for Node.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carter-thaxton/cv.git"
+  },
+  "keywords": [
+    "opencv",
+    "cv",
+    "computer",
+    "vision"
+  ],
+  "license": "MIT"
 }
