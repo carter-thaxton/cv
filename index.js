@@ -30,6 +30,8 @@ var MatPtr = ptr(Mat);
 var MatPtrPtr = ptr(MatPtr);
 
 var CvCapturePtr = VoidPtr;
+var CvCapturePtrPtr = ptr(CvCapturePtr);
+
 var CvArrPtr = VoidPtr;
 
 
@@ -49,6 +51,8 @@ var imgproc = ffi.Library('libopencv_imgproc', {
 
 var highgui = ffi.Library('libopencv_highgui', {
   'cvCreateCameraCapture': [ CvCapturePtr, [ 'int' ] ],
+  'cvCreateFileCapture': [ CvCapturePtr, [ 'string' ] ],
+  'cvReleaseCapture': [ 'void', [ CvCapturePtrPtr ] ],
   'cvQueryFrame': [ IplImagePtr, [ CvCapturePtr ] ],
   'cvGrabFrame': [ 'bool', [ CvCapturePtr ] ],
   'cvRetrieveFrame': [ IplImagePtr, [ CvCapturePtr ] ],
@@ -70,6 +74,8 @@ cv.cvtColor = imgproc.cvCvtColor;
 cv.canny = imgproc.cvCanny;
 
 cv.captureFromCAM = highgui.cvCreateCameraCapture;
+cv.captureFromFile = highgui.cvCreateFileCapture;
+cv.releaseCapture = highgui.cvReleaseCapture;
 cv.queryFrame = highgui.cvQueryFrame;
 cv.grabFrame = highgui.cvGrabFrame;
 cv.retrieveFrame = highgui.cvRetrieveFrame;
