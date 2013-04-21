@@ -21,18 +21,24 @@ var CvPoint = Struct({
   y: 'int'
 });
 
-var IplImage = VoidPtr;
+var IplImage = Void;
 var IplImagePtr = ptr(IplImage);
 var IplImagePtrPtr = ptr(IplImagePtr);
 
-var Mat = VoidPtr;
+var Mat = Void;
 var MatPtr = ptr(Mat);
 var MatPtrPtr = ptr(MatPtr);
 
-var CvCapturePtr = VoidPtr;
+var CvCapture = Void;
+var CvCapturePtr = ptr(CvCapture);
 var CvCapturePtrPtr = ptr(CvCapturePtr);
 
-var CvArrPtr = VoidPtr;
+var VideoWriter = Void;
+var VideoWriterPtr = ptr(VideoWriter);
+var VideoWriterPtrPtr = ptr(VideoWriterPtr);
+
+var CvArr = Void;
+var CvArrPtr = ptr(CvArr);
 
 
 // ---- Functions ----
@@ -58,6 +64,15 @@ var highgui = ffi.Library('libopencv_highgui', {
   'cvRetrieveFrame': [ IplImagePtr, [ CvCapturePtr ] ],
   'cvLoadImage': [ IplImagePtr, [ 'string', 'int' ] ],
   'cvSaveImage': [ 'int', [ 'string', IplImagePtr, VoidPtr ] ],
+  'cvCreateVideoWriter': [ VideoWriterPtr, [ 'string', 'int', 'double', CvSize, 'int' ] ],
+  'cvReleaseVideoWriter': [ 'void', [ VideoWriterPtrPtr ] ],
+  'cvWriteFrame': [ 'int', [ VideoWriterPtr, IplImagePtr ] ],
+  'cvNamedWindow': [ 'int', [ 'string', 'int' ] ],
+  'cvDestroyWindow': [ 'void', [ 'string' ] ],
+  'cvDestroyAllWindows': [ 'void', [ ] ],
+  'cvShowImage': [ 'void', [ 'string', CvArrPtr ] ],
+  'cvResizeWindow': [ 'void', [ 'string', 'int', 'int' ] ],
+  'cvMoveWindow': [ 'void', [ 'string', 'int', 'int' ] ],
 });
 
 
@@ -81,6 +96,15 @@ cv.grabFrame = highgui.cvGrabFrame;
 cv.retrieveFrame = highgui.cvRetrieveFrame;
 cv.loadImage = highgui.cvLoadImage;
 cv.saveImage = highgui.cvSaveImage;
+cv.createVideoWriter = highgui.cvCreateVideoWriter;
+cv.releaseVideoWriter = highgui.cvReleaseVideoWriter;
+cv.writeFrame = highgui.cvWriteFrame;
+cv.namedWindow = highgui.cvNamedWindow;
+cv.destroyWindow = highgui.cvDestroyWindow;
+cv.destroyAllWindows = highgui.cvDestroyAllWindows;
+cv.showImage = highgui.cvShowImage;
+cv.resizeWindow = highgui.cvResizeWindow;
+cv.moveWindow = highgui.cvMoveWindow;
 
 
 // ---- Enums ----
@@ -105,8 +129,15 @@ cv.GRAY2RGBA   = cv.GRAY2BGRA;
 cv.BGRA2GRAY   = 10;
 cv.RGBA2GRAY   = 11;
 
-cv.LOAD_IMAGE_GRAYSCALE = 0;
-cv.LOAD_IMAGE_COLOR = 1;
-cv.LOAD_IMAGE_UNCHANGED = -1;
+cv.LOAD_IMAGE_GRAYSCALE   = 0;
+cv.LOAD_IMAGE_COLOR       = 1;
+cv.LOAD_IMAGE_UNCHANGED   = -1;
+
+
+// ---- Macros implemented as util functions ----
+cv.FOURCC = function(fourcc) {
+  return (fourcc.charCodeAt(0) & 255) | ((fourcc.charCodeAt(1) & 255) << 8) | ((fourcc.charCodeAt(2) & 255) << 16) | ((fourcc.charCodeAt(3) & 255) << 24);
+};
+
 
 module.exports = cv;
