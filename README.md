@@ -1,7 +1,7 @@
 # cv
 ## OpenCV for Node.js
 
-This module wraps the [OpenCV 1.x API](http://docs.opencv.org/modules/refman.html) for Node.js, using [node-ffi](http://github.com/rbranson/node-ffi) and [ref](http://github.com/TooTallNate/ref).
+This module wraps the [OpenCV 1.x API](http://docs.opencv.org/modules/refman.html) for Node.js, using [node-ffi](http://github.com/rbranson/node-ffi), [ref](http://github.com/TooTallNate/ref), and [ref-struct](http://github.com/TooTallNate/ref-struct).
 
 It provides a nice, Javascript friendly API over OpenCV, without actually using any native C/C++ whatsoever.
 
@@ -19,7 +19,7 @@ It provides a nice, Javascript friendly API over OpenCV, without actually using 
 
 ## API
 
-[Opencv API methods](http://docs.opencv.org/modules/refman.html) are available directly via the cv module - e.g. cvCreateImage is exposed as cv.createImage by convention. Enums are also exposed directly - e.g. cv.BGR2BGRA. Refer to [blob/master/index.js](index.js) for the current list of bindings.
+[OpenCV API methods](http://docs.opencv.org/modules/refman.html) are available directly via the cv module - e.g. cvCreateImage is exposed as cv.createImage by convention. Enums are also exposed directly - e.g. cv.BGR2BGRA. Refer to [blob/master/index.js](index.js) for the current list of bindings.
 
 ## License
 
