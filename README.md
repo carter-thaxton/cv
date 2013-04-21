@@ -1,15 +1,23 @@
-cv
-==
-### OpenCV for Node.js
+# cv
+## OpenCV for Node.js
 
 This module wraps the [OpenCV 1.x API](http://docs.opencv.org/modules/core/doc/old_basic_structures.html) for Node.js, using [node-ffi](http://github.com/rbranson/node-ffi) and [ref](http://github.com/TooTallNate/ref).
 
 It provides a nice, Javascript friendly API over OpenCV, without actually using any native C/C++ whatsoever.
 
+## Example usage
 
+    var cv = require('cv');
+    cv.loadImage.async('data/input.jpg', cv.LOAD_IMAGE_UNCHANGED, function (err, img) {
+      
+    });
 
-License
--------
+## Synchronous usage
+
+    var cv = require('cv');  
+    var img = cv.loadImage('data/input.jpg', cv.LOAD_IMAGE_UNCHANGED);
+
+## License
 
 (The MIT License)
 
