@@ -53,6 +53,7 @@ var core = ffi.Library('libopencv_core', {
 var imgproc = ffi.Library('libopencv_imgproc', {
   'cvCvtColor': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
   'cvCanny': [ 'void', [ CvArrPtr, CvArrPtr, 'double', 'double', 'int' ] ],
+  'cvResize': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
 });
 
 var highgui = ffi.Library('libopencv_highgui', {
@@ -87,6 +88,7 @@ cv.releaseMat = core.cvReleaseMat;
 
 cv.cvtColor = imgproc.cvCvtColor;
 cv.canny = imgproc.cvCanny;
+cv.resize = imgproc.cvResize;
 
 cv.captureFromCAM = highgui.cvCreateCameraCapture;
 cv.captureFromFile = highgui.cvCreateFileCapture;
@@ -133,8 +135,18 @@ cv.LOAD_IMAGE_GRAYSCALE   = 0;
 cv.LOAD_IMAGE_COLOR       = 1;
 cv.LOAD_IMAGE_UNCHANGED   = -1;
 
+cv.INTER_NN        = 0;
+cv.INTER_LINEAR    = 1;
+cv.INTER_CUBIC     = 2;
+cv.INTER_AREA      = 3;
+cv.INTER_LANCZOS4  = 4;
+
 
 // ---- Macros implemented as util functions ----
+cv.size = function(width, height) {
+  return new CvSize({ width: width, height: height });
+};
+
 cv.FOURCC = function(fourcc) {
   return (fourcc.charCodeAt(0) & 255) | ((fourcc.charCodeAt(1) & 255) << 8) | ((fourcc.charCodeAt(2) & 255) << 16) | ((fourcc.charCodeAt(3) & 255) << 24);
 };
