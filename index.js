@@ -105,5 +105,8 @@ cv.GRAY2RGBA   = cv.GRAY2BGRA;
 cv.BGRA2GRAY   = 10;
 cv.RGBA2GRAY   = 11;
 
+cv.LOAD_IMAGE_GRAYSCALE = 0;
+cv.LOAD_IMAGE_COLOR = 1;
+cv.LOAD_IMAGE_UNCHANGED = -1;
 
 module.exports = cv;

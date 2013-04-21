@@ -29,7 +29,7 @@ function outputAndRelease(filename, image, cb) {
 //var camera = cv.captureFromCAM(-1)
 //cv.queryFrame.async(camera, function(err, img_orig) {
 
-cv.loadImage.async('data/input.jpg', 1, function(err, img_orig) {
+cv.loadImage.async('data/input.jpg', cv.LOAD_IMAGE_COLOR, function(err, img_orig) {
 
   console.log('starting')
 
