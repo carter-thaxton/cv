@@ -52,6 +52,7 @@ var core = ffi.Library('libopencv_core', {
 
 var imgproc = ffi.Library('libopencv_imgproc', {
   'cvCvtColor': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
+  'cvPyrDown': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
   'cvCanny': [ 'void', [ CvArrPtr, CvArrPtr, 'double', 'double', 'int' ] ],
   'cvResize': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
 });
@@ -78,7 +79,7 @@ var highgui = ffi.Library('libopencv_highgui', {
 
 
 // ---- API ----
-var cv = {};
+var cv = require('./cv_consts');
 
 cv.getSize = core.cvGetSize;
 cv.createImage = core.cvCreateImage;
@@ -87,6 +88,7 @@ cv.createMat = core.cvCreateMat;
 cv.releaseMat = core.cvReleaseMat;
 
 cv.cvtColor = imgproc.cvCvtColor;
+cv.pyrDown  = imgproc.cvPyrDown;
 cv.canny = imgproc.cvCanny;
 cv.resize = imgproc.cvResize;
 
@@ -107,40 +109,6 @@ cv.destroyAllWindows = highgui.cvDestroyAllWindows;
 cv.showImage = highgui.cvShowImage;
 cv.resizeWindow = highgui.cvResizeWindow;
 cv.moveWindow = highgui.cvMoveWindow;
-
-
-// ---- Enums ----
-cv.BGR2BGRA    = 0;
-cv.RGB2BGRA    = cv.BGR2BGRA;
-cv.BGRA2BGR    = 1;
-cv.RGBA2RGB    = cv.BGRA2BGR;
-cv.BGR2RGBA    = 2;
-cv.RGBA2RGB    = cv.BGR2RGBA;
-cv.RGBA2BGR    = 3;
-cv.BGRA2RGB    = cv.RGBA2BGR;
-cv.BGR2RGB     = 4;
-cv.RGB2BGR     = cv.BGR2RGB;
-cv.BGRA2RGBA   = 5;
-cv.RGBA2BGRA   = cv.BGRA2RGBA;
-cv.BGR2GRAY    = 6;
-cv.RGB2GRAY    = 7;
-cv.GRAY2BGR    = 8;
-cv.GRAY2RGB    = cv.GRAY2BGR;
-cv.GRAY2BGRA   = 9;
-cv.GRAY2RGBA   = cv.GRAY2BGRA;
-cv.BGRA2GRAY   = 10;
-cv.RGBA2GRAY   = 11;
-
-cv.LOAD_IMAGE_GRAYSCALE   = 0;
-cv.LOAD_IMAGE_COLOR       = 1;
-cv.LOAD_IMAGE_UNCHANGED   = -1;
-
-cv.INTER_NN        = 0;
-cv.INTER_LINEAR    = 1;
-cv.INTER_CUBIC     = 2;
-cv.INTER_AREA      = 3;
-cv.INTER_LANCZOS4  = 4;
-
 
 // ---- Macros implemented as util functions ----
 cv.size = function(width, height) {
