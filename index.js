@@ -65,7 +65,7 @@ var highgui = ffi.Library('libopencv_highgui', {
   'cvGrabFrame': [ 'bool', [ CvCapturePtr ] ],
   'cvRetrieveFrame': [ IplImagePtr, [ CvCapturePtr ] ],
   'cvLoadImage': [ IplImagePtr, [ 'string', 'int' ] ],
-  'cvSaveImage': [ 'int', [ 'string', IplImagePtr, VoidPtr ] ],
+  'cvSaveImage': [ 'int', [ 'string', IplImagePtr, 'int' ] ],
   'cvCreateVideoWriter': [ VideoWriterPtr, [ 'string', 'int', 'double', CvSize, 'int' ] ],
   'cvReleaseVideoWriter': [ 'void', [ VideoWriterPtrPtr ] ],
   'cvWriteFrame': [ 'int', [ VideoWriterPtr, IplImagePtr ] ],
