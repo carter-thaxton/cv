@@ -2,7 +2,6 @@ var ffi = require('ffi');
 var ref = require('ref');
 var Struct = require('ref-struct');
 
-
 // ---- Types ----
 function ptr(type) {
   return ref.refType(type);
@@ -10,6 +9,7 @@ function ptr(type) {
 
 var Void = ref.types.void;
 var VoidPtr = ptr(Void);
+var VoidPtrPtr = ptr(VoidPtr);
 
 var CvSize = Struct({
   width: 'int',
@@ -20,6 +20,7 @@ var CvPoint = Struct({
   x: 'int',
   y: 'int'
 });
+
 
 var IplImage = Void;
 var IplImagePtr = ptr(IplImage);
@@ -48,13 +49,36 @@ var core = ffi.Library('libopencv_core', {
   'cvReleaseImage': [ 'void', [ IplImagePtrPtr ] ],
   'cvCreateMat': [ MatPtr, [ 'int', 'int', 'int' ] ],
   'cvReleaseMat': [ 'void', [ MatPtrPtr ] ],
+  'cvGetElemType': [ 'int', [ CvArrPtr ] ],
+
+  'cvCreateMemStorage': [ CvArrPtr, [ 'int' ] ],
+  'cvCreateSeq': [ CvArrPtr, [ 'int', 'int', 'int', CvArrPtr ] ],
+  'cvGetSeqElem': [ CvArrPtr, [ CvArrPtr, 'int' ] ],
+  'cvCvtSeqToArray': [ 'void', [ CvArrPtr, CvArrPtr ] ],
+  'cvSeqPush': [ CvArrPtr, [ CvArrPtr, VoidPtr ] ],
+  'cvSeqPop': [ 'void', [ CvArrPtr, VoidPtr ] ],
+
+  'cvRectangle': [ 'void', [ CvArrPtr, CvPoint, CvPoint, 'int', 'int', 'int' ] ],
+
+
 });
 
 var imgproc = ffi.Library('libopencv_imgproc', {
   'cvCvtColor': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
   'cvPyrDown': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
+  'cvPyrUp': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
   'cvCanny': [ 'void', [ CvArrPtr, CvArrPtr, 'double', 'double', 'int' ] ],
   'cvResize': [ 'void', [ CvArrPtr, CvArrPtr, 'int' ] ],
+
+
+  'cvFindContours': [ 'int', [ CvArrPtr, CvArrPtr, VoidPtrPtr, 'int', 'int', 'int'  ] ],
+  //'cvStartFindContours': [ CvArrPtr, [ CvArrPtr, CvArrPtr, 'int', 'int', 'int'  ] ],
+  //'cvDrawContours': [ 'void', [ CvArrPtr, CvArrPtr, 'int', 'int', 'int' ] ],
+  //'cvMixChannels': [ 'void', [ CvArrPtr, 'int', CvArrPtr, 'int', CvArrPtr, 'int' ] ],
+  //'cvMixChannels': [ 'void', [ CvArrPtr, 'int', CvArrPtr, 'int', 'pointer', 'int' ] ],
+
+  'cvThreshold': [ 'double', [ CvArrPtr, CvArrPtr, 'double', 'double', 'int' ] ],
+
 });
 
 var highgui = ffi.Library('libopencv_highgui', {
@@ -86,11 +110,33 @@ cv.createImage = core.cvCreateImage;
 cv.releaseImage = core.cvReleaseImage;
 cv.createMat = core.cvCreateMat;
 cv.releaseMat = core.cvReleaseMat;
+cv.getType = core.cvGetElemType;
+cv.createMemStorage = core.cvCreateMemStorage;
+cv.createSeq = core.cvCreateSeq;
+cv.getSeqElem = core.cvGetSeqElem;
+cv.cvtSeqToArray = core.cvCvtSeqToArray;
+cv.seqPush = core.cvSeqPush;
+cv.seqPop = core.cvSeqPop;
+
+cv.rectangle = core.cvRectangle;
+
+
 
 cv.cvtColor = imgproc.cvCvtColor;
 cv.pyrDown  = imgproc.cvPyrDown;
+cv.pyrUp    = imgproc.cvPyrUp;
+
+//cv.mixChannels  = imgproc.cvMixChannels;
+
 cv.canny = imgproc.cvCanny;
-cv.resize = imgproc.cvResize;
+cv.canny = imgproc.cvCanny;
+cv.threshold = imgproc.cvThreshold;
+cv.findContours = imgproc.cvFindContours;
+
+//cv.startFindContours = imgproc.cvStartFindContours;
+//cv.drawContours = imgproc.cvDrawContours;
+
+
 
 cv.captureFromCAM = highgui.cvCreateCameraCapture;
 cv.captureFromFile = highgui.cvCreateFileCapture;
@@ -115,9 +161,13 @@ cv.size = function(width, height) {
   return new CvSize({ width: width, height: height });
 };
 
+cv.matSize = function(mat) {
+    var buf = cv.getSize(mat);
+    return new CvSize({ width: buf.width, height: buf.height });
+}
+
 cv.FOURCC = function(fourcc) {
   return (fourcc.charCodeAt(0) & 255) | ((fourcc.charCodeAt(1) & 255) << 8) | ((fourcc.charCodeAt(2) & 255) << 16) | ((fourcc.charCodeAt(3) & 255) << 24);
 };
-
 
 module.exports = cv;
