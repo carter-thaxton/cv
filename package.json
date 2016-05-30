@@ -8,7 +8,9 @@
   "dependencies": {
     "ffi": "1.2.x",
     "ref": "0.1.x",
-    "ref-struct": "0.0.x"
+    "ref-array": "0.0.3",
+    "ref-struct": "0.0.x",
+    "ref-union": "*"
   },
   "author": "Carter Thaxton <carter.thaxton@gmail.com> (http://github.com/carter-thaxton)",
   "readmeFilename": "README.md",

@@ -1,11 +1,19 @@
 var ffi = require('ffi');
 var ref = require('ref');
+var ArrayType = require('ref-array');
 var Struct = require('ref-struct');
+var Union = require('ref-union');
 
 // ---- Types ----
 function ptr(type) {
   return ref.refType(type);
 }
+
+var CharArray = ArrayType(ref.types.char);
+var CharPtr = ptr(ref.types.char);
+
+var IntArray = ArrayType(ref.types.int);
+var IntPtr = ptr(ref.types.int);
 
 var Void = ref.types.void;
 var VoidPtr = ptr(Void);
@@ -33,7 +41,49 @@ var CvPoint2D32f = Struct({
     y: 'float'
 });
 
-var IplImage = Void;
+var CvMat = Struct({
+  type: 'int',
+  step: 'int',
+  refcount: IntPtr,
+  hdr_refcount: 'int',
+  data: new Union({
+    ptr: 'pointer',
+    s: 'pointer',
+    i: 'pointer',
+    fl: 'pointer',
+    db: 'pointer'
+  })
+});
+var CvMatPtr = ptr(CvMat);
+
+var IplROI = Void;
+var IplROIPtr = ptr(Void);
+
+var IplImage = Struct({
+  nSize: 'int',
+  ID: 'int',
+  nChannels: 'int',
+  alphaChannel: 'int',
+  depth: 'int',
+  colorModel: CharArray,
+  channelSeq: CharArray,
+  dataOrder: 'int',
+  origin: 'int',
+  align: 'int',
+  width: 'int',
+  height: 'int',
+  roi: VoidPtr,
+  maskROI: VoidPtr,
+  imageId: VoidPtr,
+  tileInfo: VoidPtr,
+  imageSize: 'int',
+  imageData: 'pointer',
+  widthStep: 'int',
+  BorderMode: IntArray,
+  BorderConst: IntArray,
+  imageDataOrigin: VoidPtr
+});
+
 var IplImagePtr = ptr(IplImage);
 var IplImagePtrPtr = ptr(IplImagePtr);
 
@@ -51,7 +101,6 @@ var VideoWriterPtrPtr = ptr(VideoWriterPtr);
 
 var CvArr = Void;
 var CvArrPtr = ptr(CvArr);
-
 
 // ---- Functions ----
 var core = ffi.Library('libopencv_core', {
@@ -106,6 +155,7 @@ var highgui = ffi.Library('libopencv_highgui', {
     'cvRetrieveFrame': [ IplImagePtr, [ CvCapturePtr ] ],
     'cvLoadImage': [ IplImagePtr, [ 'string', 'int' ] ],
     'cvSaveImage': [ 'int', [ 'string', IplImagePtr, 'int' ] ],
+    'cvEncodeImage': [ CvMatPtr, [ 'string', CvArrPtr, IntPtr ] ],
     'cvCreateVideoWriter': [ VideoWriterPtr, [ 'string', 'int', 'double', CvSize, 'int' ] ],
     'cvReleaseVideoWriter': [ 'void', [ VideoWriterPtrPtr ] ],
     'cvWriteFrame': [ 'int', [ VideoWriterPtr, IplImagePtr ] ],
@@ -172,6 +222,7 @@ cv.grabFrame = highgui.cvGrabFrame;
 cv.retrieveFrame = highgui.cvRetrieveFrame;
 cv.loadImage = highgui.cvLoadImage;
 cv.saveImage = highgui.cvSaveImage;
+cv.encodeImage = highgui.cvEncodeImage;
 cv.createVideoWriter = highgui.cvCreateVideoWriter;
 cv.releaseVideoWriter = highgui.cvReleaseVideoWriter;
 cv.writeFrame = highgui.cvWriteFrame;
